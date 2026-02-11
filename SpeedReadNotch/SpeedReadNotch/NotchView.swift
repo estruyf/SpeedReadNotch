@@ -121,7 +121,7 @@ struct NotchView: View {
                                 .help("Restart")
 
                                 HoverButton(icon: "xmark", iconColor: .white) {
-                                    onDismiss()
+                                    dismissNow()
                                 }
                                 .help("Close")
                             }
@@ -171,7 +171,7 @@ struct NotchView: View {
                         .help("Settings")
                         // Close button (always visible in countdown/reading)
                         HoverButton(icon: "xmark", iconColor: .white) {
-                            onDismiss()
+                            dismissNow()
                         }
                         .help("Close")
                     }
@@ -263,6 +263,7 @@ struct NotchView: View {
         }
         .onDisappear {
             timer?.invalidate()
+            cancelAutoDismiss()
         }
         .onReceive(
             NotificationCenter.default.publisher(for: NSNotification.Name("SpacebarPressed"))
@@ -325,6 +326,7 @@ struct NotchView: View {
     func startCountdown() {
         mode = .countdown
         countdown = 3
+        cancelAutoDismiss()
 
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { t in
@@ -342,6 +344,7 @@ struct NotchView: View {
     func startReading() {
         mode = .reading
         isPlaying = true
+        cancelAutoDismiss()
         resumeReading()
     }
 
@@ -380,7 +383,7 @@ struct NotchView: View {
     }
 
     func restart() {
-        dismissTimer?.cancel()
+        cancelAutoDismiss()
         timer?.invalidate()
         currentIndex = 0
         isPlaying = false
@@ -388,12 +391,22 @@ struct NotchView: View {
     }
 
     func autoDismiss() {
-        dismissTimer?.cancel()
+        cancelAutoDismiss()
         let workItem = DispatchWorkItem {
             self.onDismiss()
         }
         dismissTimer = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: workItem)
+    }
+
+    func dismissNow() {
+        cancelAutoDismiss()
+        onDismiss()
+    }
+
+    func cancelAutoDismiss() {
+        dismissTimer?.cancel()
+        dismissTimer = nil
     }
 
     private func postNotchHeightChange() {
