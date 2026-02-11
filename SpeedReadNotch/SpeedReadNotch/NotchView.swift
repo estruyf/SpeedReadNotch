@@ -410,11 +410,6 @@ struct NotchView: View {
                 width: notchWidth + cornerRadius * 2,
                 height: notchHeight
             )
-            .shadow(
-                color: .black.opacity(0.3),
-                radius: 16,
-                y: 5
-            )
     }
     var notchBackgroundMaskGroup: some View {
         Rectangle()

@@ -79,7 +79,7 @@ class NotchWindowController: NSObject {
         
         newPanel.backgroundColor = .clear
         newPanel.isOpaque = false
-        newPanel.hasShadow = true
+        newPanel.hasShadow = false
         newPanel.level = .screenSaver // High level to sit over menu bar
         newPanel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         newPanel.isMovable = false
