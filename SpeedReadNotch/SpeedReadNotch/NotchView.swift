@@ -186,37 +186,40 @@ struct NotchView: View {
                             Text("Speed (WPM):")
                                 .font(.system(size: 11))
                                 .foregroundColor(.white)
+                                .frame(width: 80, alignment: .leading)
                             Slider(value: $wpm, in: 100...1000, step: 25)
-                                .frame(width: 350)
                             Text("\(Int(wpm))")
                                 .font(.system(size: 11))
                                 .foregroundColor(.white)
                                 .frame(width: 40)
                         }
+                        .frame(maxWidth: .infinity)
 
                         HStack {
                             Text("Font Size:")
                                 .font(.system(size: 11))
                                 .foregroundColor(.white)
+                                .frame(width: 80, alignment: .leading)
                             Slider(value: $fontSize, in: 25...75, step: 1)
-                                .frame(width: 300)
                             Text("\(Int(fontSize))")
                                 .font(.system(size: 11))
                                 .foregroundColor(.white)
                                 .frame(width: 40)
                         }
+                        .frame(maxWidth: .infinity)
 
                         HStack {
                             Text("Shortcut:")
                                 .font(.system(size: 11))
                                 .foregroundColor(.white)
+                                .frame(width: 80, alignment: .leading)
                             ShortcutRecorder(
                                 keyCode: $shortcutKeyCode,
                                 modifiers: $shortcutModifiers
                             ) {
                                 ShortcutManager.shared.register()
                             }
-                            .frame(width: 240)
+                            .frame(maxWidth: .infinity)
 
                             Button("Reset") {
                                 shortcutKeyCode = Int(defaultShortcutKeyCode)
@@ -225,10 +228,9 @@ struct NotchView: View {
                             }
                             .font(.system(size: 11))
                         }
+                        .frame(maxWidth: .infinity)
                     }
                     .padding(8)
-                    .background(Color.black.opacity(0.8))
-                    .cornerRadius(8)
                     .frame(maxWidth: .infinity)
                 }
             }
