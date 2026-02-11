@@ -35,7 +35,7 @@ xcodebuild archive \
   BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
   -quiet
 
-echo "�� Building for Intel (x86_64)…"
+echo "🔨 Building for Intel (x86_64)…"
 xcodebuild archive \
   -project "$PROJECT_DIR/SpeedReadNotch.xcodeproj" \
   -scheme "$SCHEME" \
