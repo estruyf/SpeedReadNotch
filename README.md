@@ -7,6 +7,8 @@
 Native macOS Speed Reading application for the notch. Enhance your reading speed
 and comprehension with word-by-word display right in your notch.
 
+![SpeedReadNotch in action](assets/sample.gif)
+
 ## Features
 
 - **Speed Reading**: Display text one word at a time with adjustable
