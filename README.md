@@ -27,6 +27,10 @@ and comprehension with word-by-word display right in your notch.
 
 ## Screenshots
 
+### Tray Menu
+
+![Tray Menu](assets/screenshots/tray-menu.png)
+
 ### Reading in Action
 ![Reading Mode](assets/screenshots/reading-on.png)
 

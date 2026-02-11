@@ -1,10 +1,12 @@
 import Cocoa
+import ServiceManagement
 
 class StatusBarManager: NSObject {
     static let shared = StatusBarManager()
 
     private var statusItem: NSStatusItem?
     private var menu: NSMenu?
+    private var startAtLoginItem: NSMenuItem?
 
     func setupStatusBar() {
         // Create status bar item
@@ -29,6 +31,9 @@ class StatusBarManager: NSObject {
             NSMenuItem(title: "Run sample", action: #selector(runTest), keyEquivalent: ""))
         menu?.addItem(
             NSMenuItem(title: "Settings", action: #selector(openSettings), keyEquivalent: ""))
+        let startItem = NSMenuItem(title: "Start at Login", action: #selector(toggleStartAtLogin), keyEquivalent: "")
+        startAtLoginItem = startItem
+        menu?.addItem(startItem)
         menu?.addItem(NSMenuItem.separator())
         let appVersion =
             Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
@@ -48,6 +53,32 @@ class StatusBarManager: NSObject {
 
         // Attach menu to status item
         statusItem?.menu = menu
+
+        updateStartAtLoginItemState()
+    }
+
+    @objc private func toggleStartAtLogin() {
+        if #available(macOS 13.0, *) {
+            do {
+                if SMAppService.mainApp.status == .enabled {
+                    try SMAppService.mainApp.unregister()
+                } else {
+                    try SMAppService.mainApp.register()
+                }
+            } catch {
+                NSLog("Failed to toggle start at login: \(error)")
+            }
+        }
+        updateStartAtLoginItemState()
+    }
+
+    private func updateStartAtLoginItemState() {
+        if #available(macOS 13.0, *) {
+            startAtLoginItem?.state = SMAppService.mainApp.status == .enabled ? .on : .off
+        } else {
+            startAtLoginItem?.state = .off
+            startAtLoginItem?.isEnabled = false
+        }
     }
 
     @objc private func runTest() {
