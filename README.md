@@ -11,7 +11,7 @@ and comprehension with word-by-word display right in your notch.
 
 - **Speed Reading**: Display text one word at a time with adjustable
   words-per-minute (WPM) settings
-- **Global Shortcut**: Press `Command + Shift + R` to instantly read any
+- **Global Shortcut**: Press `Control + Shift + R` to instantly read any
   selected text
 - **Notch Integration**: Utilizes your MacBook's notch for unobtrusive reading
 - **Customizable Settings**: Adjust reading speed, font size, and more
@@ -21,7 +21,7 @@ and comprehension with word-by-word display right in your notch.
 
 | Shortcut | Action |
 |----------|--------|
-| `Command + Shift + R` | Read selected text (select text first and then press the shortcut) |
+| `Control + Shift + R` | Read selected text (select text first and then press the shortcut) |
 | `space` | Pause/Resume reading |
 | `Escape` | Stop reading |
 

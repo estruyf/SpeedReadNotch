@@ -1,12 +1,13 @@
-import SwiftUI
 import AppKit
+import Carbon
+import SwiftUI
 
 struct NotchView: View {
     let text: String
     var onDismiss: () -> Void
     var autoStart: Bool = false
     let topInset: CGFloat
-    
+
     @State private var words: [String] = []
     @State private var currentIndex = 0
     @State private var countdown = 3
@@ -27,54 +28,59 @@ struct NotchView: View {
         self.topInset = topInset
         self._showSettings = State(initialValue: startWithSettings)
     }
-    
+
     // Settings
     @AppStorage("wpm") private var wpm: Double = 300
     @AppStorage("fontSize") private var fontSize: Double = 20
-    
+    @AppStorage("shortcutKeyCode") private var shortcutKeyCode: Int = Int(defaultShortcutKeyCode)
+    @AppStorage("shortcutModifiers") private var shortcutModifiers: Int = Int(
+        defaultShortcutModifiers)
+    @AppStorage("shortcutModifier") private var shortcutModifier: String = "control"
+
     @State private var timer: Timer?
     @State private var dismissTimer: DispatchWorkItem?
     @State private var notchWidth: CGFloat = 500
-    
+
     // Animation constants
     private let springAnimation = Animation.interactiveSpring(
         response: 0.35,
         dampingFraction: 0.75,
         blendDuration: 0
     )
-    
+
     enum ViewMode {
         case countdown
         case reading
         case finished
     }
-    
+
     // Geometry constants
     private let cornerRadius: CGFloat = 12
     private let spacing: CGFloat = 8
     private let baseBodyHeight: CGFloat = 92
-    private let expandedBodyHeight: CGFloat = 165
+    private let expandedBodyHeight: CGFloat = 192
     private let contentHorizontalPadding: CGFloat = 16
     private let textHorizontalPadding: CGFloat = 16
     private let widthBuffer: CGFloat = 12
-    
+
     private var notchBodyHeight: CGFloat {
-        showSettings && (mode == .reading || mode == .countdown) ? expandedBodyHeight : baseBodyHeight
+        showSettings && (mode == .reading || mode == .countdown)
+            ? expandedBodyHeight : baseBodyHeight
     }
 
     private var fontSizeExtraHeight: CGFloat {
         max(0, fontSize - 50)
     }
-    
+
     private var notchHeight: CGFloat {
         notchBodyHeight + topInset + fontSizeExtraHeight
     }
-    
+
     var body: some View {
         ZStack(alignment: .top) {
             // The notch background shape using mask
             notchBackground
-            
+
             // Content
             VStack(spacing: 8) {
                 // Main content area
@@ -98,7 +104,7 @@ struct NotchView: View {
                             Image(systemName: "checkmark")
                                 .font(.system(size: 24))
                                 .foregroundColor(.green)
-                            
+
                             HStack(spacing: 8) {
                                 Button(action: restart) {
                                     HStack(spacing: 4) {
@@ -123,13 +129,15 @@ struct NotchView: View {
                     }
                 }
                 .frame(height: 40 + fontSizeExtraHeight)
-                
+
                 // Controls
                 if mode == .reading || mode == .countdown {
                     HStack(spacing: 8) {
                         if mode == .reading {
                             // Play/Pause button
-                            HoverButton(icon: isPlaying ? "pause.fill" : "play.fill", iconColor: .white) {
+                            HoverButton(
+                                icon: isPlaying ? "pause.fill" : "play.fill", iconColor: .white
+                            ) {
                                 togglePlayPause()
                             }
                             .help(isPlaying ? "Pause" : "Play")
@@ -142,7 +150,7 @@ struct NotchView: View {
                             }
                             .help("Go back 5 words")
                             .disabled(currentIndex == 0)
-                            
+
                             // Restart button
                             HoverButton(icon: "arrow.counterclockwise", iconColor: .white) {
                                 restart()
@@ -170,7 +178,7 @@ struct NotchView: View {
                     .padding(.horizontal, 12)
                     .frame(height: 20)
                 }
-                
+
                 // Settings panel
                 if showSettings && (mode == .reading || mode == .countdown) {
                     VStack(spacing: 8) {
@@ -185,7 +193,7 @@ struct NotchView: View {
                                 .foregroundColor(.white)
                                 .frame(width: 40)
                         }
-                        
+
                         HStack {
                             Text("Font Size:")
                                 .font(.system(size: 11))
@@ -196,6 +204,26 @@ struct NotchView: View {
                                 .font(.system(size: 11))
                                 .foregroundColor(.white)
                                 .frame(width: 40)
+                        }
+
+                        HStack {
+                            Text("Shortcut:")
+                                .font(.system(size: 11))
+                                .foregroundColor(.white)
+                            ShortcutRecorder(
+                                keyCode: $shortcutKeyCode,
+                                modifiers: $shortcutModifiers
+                            ) {
+                                ShortcutManager.shared.register()
+                            }
+                            .frame(width: 240)
+
+                            Button("Reset") {
+                                shortcutKeyCode = Int(defaultShortcutKeyCode)
+                                shortcutModifiers = Int(defaultShortcutModifiers)
+                                ShortcutManager.shared.register()
+                            }
+                            .font(.system(size: 11))
                         }
                     }
                     .padding(8)
@@ -236,17 +264,23 @@ struct NotchView: View {
         .onDisappear {
             timer?.invalidate()
         }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("SpacebarPressed"))) { _ in
+        .onReceive(
+            NotificationCenter.default.publisher(for: NSNotification.Name("SpacebarPressed"))
+        ) { _ in
             if mode == .reading {
                 togglePlayPause()
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NotchEscapePressed"))) { _ in
+        .onReceive(
+            NotificationCenter.default.publisher(for: NSNotification.Name("NotchEscapePressed"))
+        ) { _ in
             if mode == .reading {
                 onDismiss()
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NotchOpenSettings"))) { _ in
+        .onReceive(
+            NotificationCenter.default.publisher(for: NSNotification.Name("NotchOpenSettings"))
+        ) { _ in
             showSettings = true
         }
         .onChange(of: showSettings) { _, newValue in
@@ -287,11 +321,11 @@ struct NotchView: View {
             postNotchHeightChange()
         }
     }
-    
+
     func startCountdown() {
         mode = .countdown
         countdown = 3
-        
+
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { t in
             if countdown > 1 {
@@ -304,23 +338,23 @@ struct NotchView: View {
             }
         }
     }
-    
+
     func startReading() {
         mode = .reading
         isPlaying = true
         resumeReading()
     }
-    
+
     func resumeReading() {
         timer?.invalidate()
-        
+
         let interval = 60.0 / wpm
-        
+
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { t in
             if !isPlaying {
                 return
             }
-            
+
             if currentIndex < words.count - 1 {
                 currentIndex += 1
             } else {
@@ -330,21 +364,21 @@ struct NotchView: View {
             }
         }
     }
-    
+
     func togglePlayPause() {
         isPlaying.toggle()
-        
+
         if isPlaying {
             resumeReading()
         } else {
             timer?.invalidate()
         }
     }
-    
+
     func goBack5Words() {
         currentIndex = max(0, currentIndex - 5)
     }
-    
+
     func restart() {
         dismissTimer?.cancel()
         timer?.invalidate()
@@ -352,7 +386,7 @@ struct NotchView: View {
         isPlaying = false
         startReading()
     }
-    
+
     func autoDismiss() {
         dismissTimer?.cancel()
         let workItem = DispatchWorkItem {
@@ -361,7 +395,7 @@ struct NotchView: View {
         dismissTimer = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: workItem)
     }
-    
+
     private func postNotchHeightChange() {
         NotificationCenter.default.post(
             name: NSNotification.Name("NotchHeightChanged"),
@@ -389,18 +423,20 @@ struct NotchView: View {
     private func updateNotchWidth() {
         let minWidth: CGFloat = 500
         let font = NSFont.systemFont(ofSize: fontSize, weight: .medium)
-        let maxWordWidth = words
+        let maxWordWidth =
+            words
             .map { word in
                 (word as NSString).size(withAttributes: [.font: font]).width
             }
             .max() ?? 0
-        let paddedWidth = maxWordWidth
+        let paddedWidth =
+            maxWordWidth
             + (contentHorizontalPadding * 2)
             + (textHorizontalPadding * 2)
             + widthBuffer
         notchWidth = max(minWidth, paddedWidth)
     }
-    
+
     // MARK: - Visual Components
     var notchBackground: some View {
         Rectangle()
@@ -418,10 +454,12 @@ struct NotchView: View {
                 width: notchWidth,
                 height: notchHeight
             )
-            .clipShape(.rect(
-                bottomLeadingRadius: cornerRadius,
-                bottomTrailingRadius: cornerRadius
-            ))
+            .clipShape(
+                .rect(
+                    bottomLeadingRadius: cornerRadius,
+                    bottomTrailingRadius: cornerRadius
+                )
+            )
             .overlay {
                 // Top Right "Liquid" Corner
                 ZStack(alignment: .topTrailing) {
