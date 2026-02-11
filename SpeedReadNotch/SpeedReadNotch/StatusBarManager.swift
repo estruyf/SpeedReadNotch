@@ -31,7 +31,8 @@ class StatusBarManager: NSObject {
             NSMenuItem(title: "Run sample", action: #selector(runTest), keyEquivalent: ""))
         menu?.addItem(
             NSMenuItem(title: "Settings", action: #selector(openSettings), keyEquivalent: ""))
-        let startItem = NSMenuItem(title: "Start at Login", action: #selector(toggleStartAtLogin), keyEquivalent: "")
+        let startItem = NSMenuItem(
+            title: "Start at Login", action: #selector(toggleStartAtLogin), keyEquivalent: "")
         startAtLoginItem = startItem
         menu?.addItem(startItem)
         menu?.addItem(NSMenuItem.separator())
