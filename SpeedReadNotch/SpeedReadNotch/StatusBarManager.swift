@@ -11,10 +11,16 @@ class StatusBarManager: NSObject {
         let statusBar = NSStatusBar.system
         statusItem = statusBar.statusItem(withLength: NSStatusItem.squareLength)
         
-        // Set the button title/icon
+        // Set the button icon
         if let button = statusItem?.button {
-            button.title = "▶"
-            button.font = NSFont.systemFont(ofSize: 12, weight: .semibold)
+            if let image = NSImage(named: NSImage.Name("TrayIcon")) {
+                image.size = NSSize(width: 18, height: 18)
+                image.isTemplate = true
+                button.image = image
+            } else {
+                // Fallback to emoji if image not found
+                button.title = "📖"
+            }
         }
         
         // Create menu
