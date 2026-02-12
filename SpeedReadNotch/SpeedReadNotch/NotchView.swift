@@ -36,6 +36,7 @@ struct NotchView: View {
     @AppStorage("shortcutModifiers") private var shortcutModifiers: Int = Int(
         defaultShortcutModifiers)
     @AppStorage("shortcutModifier") private var shortcutModifier: String = "control"
+    @AppStorage("cleanWords") private var cleanWords: Bool = false
 
     @State private var timer: Timer?
     @State private var dismissTimer: DispatchWorkItem?
@@ -58,7 +59,7 @@ struct NotchView: View {
     private let cornerRadius: CGFloat = 12
     private let spacing: CGFloat = 8
     private let baseBodyHeight: CGFloat = 92
-    private let expandedBodyHeight: CGFloat = 192
+    private let expandedBodyHeight: CGFloat = 222
     private let contentHorizontalPadding: CGFloat = 16
     private let textHorizontalPadding: CGFloat = 16
     private let widthBuffer: CGFloat = 12
@@ -248,6 +249,13 @@ struct NotchView: View {
                             .font(.system(size: 11))
                         }
                         .frame(maxWidth: .infinity)
+                        
+                        Toggle("Remove special characters", isOn: $cleanWords)
+                            .font(.system(size: 11))
+                            .foregroundColor(.white)
+                            .toggleStyle(SwitchToggleStyle(tint: .blue))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 4)
                     }
                     .padding(8)
                     .frame(maxWidth: .infinity)
@@ -260,7 +268,7 @@ struct NotchView: View {
         .frame(height: notchHeight)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
-            words = text.components(separatedBy: .whitespacesAndNewlines).filter { !$0.isEmpty }
+            processText()
             updateNotchWidth()
             postNotchHeightChange()
             postNotchWidthChange()
@@ -281,6 +289,9 @@ struct NotchView: View {
                 isPlaying = false
                 postNotchHeightChange()
             }
+        }
+        .onChange(of: cleanWords) { _, _ in
+            processText()
         }
         .onDisappear {
             timer?.invalidate()
@@ -339,6 +350,17 @@ struct NotchView: View {
         countdownProgress = 1.0
         cancelAutoDismiss()
         resumeCountdown()
+    }
+    
+    func processText() {
+        let initialWords = text.components(separatedBy: .whitespacesAndNewlines).filter { !$0.isEmpty }
+        if cleanWords {
+            words = initialWords.map {
+                $0.trimmingCharacters(in: .punctuationCharacters.union(.symbols))
+            }.filter { !$0.isEmpty }
+        } else {
+            words = initialWords
+        }
     }
 
     func resumeCountdown() {
