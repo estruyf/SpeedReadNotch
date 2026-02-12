@@ -509,16 +509,22 @@ struct NotchView: View {
     private func updateNotchWidth() {
         let minWidth: CGFloat = 500
         let font = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .bold)
-        let maxWordWidth =
-            words
-            .map { word in
-                (word as NSString).size(withAttributes: [.font: font]).width
-            }
-            .max() ?? 0
-        // With ORP alignment, the word can extend up to its full width
-        // on one side of center, so we need 2x the max word width
+        
+        let maxDistanceFromORP = words.map { word -> CGFloat in
+            let parts = splitWord(word)
+            let beforeWidth = textWidth(parts.before, font: font)
+            let orpCharWidth = textWidth(String(parts.orp), font: font)
+            let afterWidth = textWidth(parts.after, font: font)
+            
+            let distanceToStart = beforeWidth + orpCharWidth / 2
+            let distanceToEnd = orpCharWidth / 2 + afterWidth
+            
+            return max(distanceToStart, distanceToEnd)
+        }.max() ?? 0
+        
+        // Since the ORP is centered, we need maxDistanceFromORP on both sides
         let paddedWidth =
-            maxWordWidth * 2
+            maxDistanceFromORP * 2
             + (contentHorizontalPadding * 2)
             + widthBuffer
         notchWidth = max(minWidth, paddedWidth)
