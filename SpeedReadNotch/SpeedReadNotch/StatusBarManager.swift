@@ -28,6 +28,8 @@ class StatusBarManager: NSObject {
         // Create menu
         menu = NSMenu()
         menu?.addItem(
+            NSMenuItem(title: "Read Clipboard", action: #selector(readClipboard), keyEquivalent: ""))
+        menu?.addItem(
             NSMenuItem(title: "Run sample", action: #selector(runTest), keyEquivalent: ""))
         menu?.addItem(
             NSMenuItem(title: "Settings", action: #selector(openSettings), keyEquivalent: ""))
@@ -95,6 +97,23 @@ class StatusBarManager: NSObject {
 
         // Show the notch with sample text
         NotchWindowController.shared.show(text: sampleText)
+    }
+
+    @objc private func readClipboard() {
+        let pasteboard = NSPasteboard.general
+        guard let text = pasteboard.string(forType: .string), !text.isEmpty else {
+            // Show error alert if clipboard is empty
+            let alert = NSAlert()
+            alert.messageText = "Clipboard is Empty"
+            alert.informativeText = "Please copy some text to your clipboard first."
+            alert.alertStyle = .informational
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+            return
+        }
+        
+        // Show the notch with clipboard text
+        NotchWindowController.shared.show(text: text)
     }
 
     @objc private func openSettings() {
