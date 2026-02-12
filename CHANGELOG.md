@@ -19,8 +19,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   releases
 - **Update Alerts**: User-friendly alerts for available updates and current
   version status
-- **Read Clipboard Feature**: New "Read Clipboard" menu item to quickly read text
-  from your clipboard without needing to select it first
+- **Read Clipboard Feature**: New "Read Clipboard" menu item to quickly read
+  text from your clipboard without needing to select it first
 
 ### Changed
 - Enhanced startup routine in `AppDelegate` to include silent update checks

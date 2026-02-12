@@ -28,7 +28,8 @@ class StatusBarManager: NSObject {
         // Create menu
         menu = NSMenu()
         menu?.addItem(
-            NSMenuItem(title: "Read Clipboard", action: #selector(readClipboard), keyEquivalent: ""))
+            NSMenuItem(title: "Read Clipboard", action: #selector(readClipboard), keyEquivalent: "")
+        )
         menu?.addItem(
             NSMenuItem(title: "Run sample", action: #selector(runTest), keyEquivalent: ""))
         menu?.addItem(
@@ -44,7 +45,8 @@ class StatusBarManager: NSObject {
         versionItem.isEnabled = false
         menu?.addItem(versionItem)
         menu?.addItem(
-            NSMenuItem(title: "Check for Updates", action: #selector(checkForUpdates), keyEquivalent: ""))
+            NSMenuItem(
+                title: "Check for Updates", action: #selector(checkForUpdates), keyEquivalent: ""))
         menu?.addItem(NSMenuItem.separator())
         menu?.addItem(
             NSMenuItem(title: "Support me ❤️", action: #selector(openSupport), keyEquivalent: ""))
@@ -111,7 +113,7 @@ class StatusBarManager: NSObject {
             alert.runModal()
             return
         }
-        
+
         // Show the notch with clipboard text
         NotchWindowController.shared.show(text: text)
     }
