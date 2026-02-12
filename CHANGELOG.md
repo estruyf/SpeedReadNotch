@@ -46,4 +46,4 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **Global Event Listener**: Detect and respond to global shortcuts without
   requiring app focus
 
-[1.0.0]: https://github.com/estruyf/speedread-notch/releases/tag/v1.0.0
+[1.0.0]: https://github.com/estruyf/speedreadnotch/releases/tag/v1.0.0

@@ -63,8 +63,8 @@ details.
 <br />
 
 <p align="center">
-  <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2Festruyf%2Fspeedread-notch">
-    <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Festruyf%2Fspeedread-notch&labelColor=%23555555&countColor=%2397ca00" height="25px" alt="SpeedReadNotch visitors" />
+  <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2Festruyf%2Fspeedreadnotch" title="Visitor Count" target="_blank">
+    <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Festruyf%2Fspeedreadnotch&labelColor=%23555555&countColor=%2397ca00" height="25px" alt="SpeedReadNotch visitors" />
   </a>
 </p>
 

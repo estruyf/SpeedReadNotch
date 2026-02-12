@@ -26,12 +26,24 @@ class StatusBarManager: NSObject {
         }
 
         // Create menu
+        let appVersion =
+            Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
         menu = NSMenu()
+        let versionItem: NSMenuItem = NSMenuItem(
+            title: "SpeedReadNotch \(appVersion)", action: nil, keyEquivalent: "")
+        versionItem.isEnabled = false
+        menu?.addItem(versionItem)
+
+        menu?.addItem(NSMenuItem.separator())
+
         menu?.addItem(
             NSMenuItem(title: "Read Clipboard", action: #selector(readClipboard), keyEquivalent: "")
         )
         menu?.addItem(
             NSMenuItem(title: "Run sample", action: #selector(runTest), keyEquivalent: ""))
+
+        menu?.addItem(NSMenuItem.separator())
+
         menu?.addItem(
             NSMenuItem(title: "Settings", action: #selector(openSettings), keyEquivalent: ""))
         let startItem = NSMenuItem(
@@ -39,18 +51,20 @@ class StatusBarManager: NSObject {
         startAtLoginItem = startItem
         menu?.addItem(startItem)
         menu?.addItem(NSMenuItem.separator())
-        let appVersion =
-            Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        let versionItem = NSMenuItem(title: "Version \(appVersion)", action: nil, keyEquivalent: "")
-        versionItem.isEnabled = false
-        menu?.addItem(versionItem)
         menu?.addItem(
             NSMenuItem(
                 title: "Check for Updates", action: #selector(checkForUpdates), keyEquivalent: ""))
+
         menu?.addItem(NSMenuItem.separator())
+
         menu?.addItem(
             NSMenuItem(title: "Support me ❤️", action: #selector(openSupport), keyEquivalent: ""))
+        menu?.addItem(
+            NSMenuItem(
+                title: "Open Source on GitHub", action: #selector(openSource), keyEquivalent: ""))
+
         menu?.addItem(NSMenuItem.separator())
+
         menu?.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: ""))
 
         // Set menu target
@@ -128,6 +142,11 @@ class StatusBarManager: NSObject {
 
     @objc private func openSupport() {
         guard let url = URL(string: "https://github.com/sponsors/estruyf") else { return }
+        NSWorkspace.shared.open(url)
+    }
+
+    @objc private func openSource() {
+        guard let url = URL(string: "https://github.com/estruyf/speedreadnotch") else { return }
         NSWorkspace.shared.open(url)
     }
 
