@@ -7,7 +7,7 @@
 Native macOS Speed Reading application for the notch. Enhance your reading speed
 and comprehension with word-by-word display right in your notch.
 
-![SpeedReadNotch in action](assets/sample.gif)
+![SpeedReadNotch in action](assets/screenshots/v1.1.0/example.gif)
 
 ## Features
 
@@ -49,16 +49,13 @@ help you read faster and more efficiently. This proven method works by:
 ![Tray Menu](assets/screenshots/v1.1.0/tray-menu.png)
 
 ### Reading in Action
-![Reading Mode](assets/screenshots/reading-on.png)
+![Reading Mode](assets/screenshots/v1.1.0/reading-on.png)
 
 ### Settings
-![Settings Panel](assets/screenshots/reading-settings.png)
-
-### Countdown
-![Countdown](assets/screenshots/countdown.png)
+![Settings Panel](assets/screenshots/v1.1.0/reading-settings.png)
 
 ### Completed
-![Reading Completed](assets/screenshots/completed.png)
+![Reading Completed](assets/screenshots/v1.1.0/completed.png)
 
 ## Architecture
 

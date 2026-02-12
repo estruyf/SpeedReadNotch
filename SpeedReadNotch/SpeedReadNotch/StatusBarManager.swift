@@ -105,7 +105,7 @@ class StatusBarManager: NSObject {
     @objc private func runTest() {
         // Sample text for testing
         let sampleText = """
-            This is a test of the SpeedRead Notch application. \
+            This is a test of the SpeedReadNotch application. \
             You can use Control+Shift+R to quickly read any selected text. The app displays one word at a time \
             at your configured words per minute speed. You can pause, restart, adjust speed and font size. \
             This makes speed reading accessible and efficient right from your notch.

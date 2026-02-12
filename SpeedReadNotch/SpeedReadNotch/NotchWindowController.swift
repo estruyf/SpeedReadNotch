@@ -246,19 +246,19 @@ class NotchWindowController: NSObject {
     }
 
     private func handleEventTap(type: CGEventType, event: CGEvent) -> Unmanaged<CGEvent>? {
-        if type == .keyDown {
-            let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
-            if keyCode == 49 && isReadingActive && panel?.isVisible == true {
-                NotificationCenter.default.post(
-                    name: NSNotification.Name("SpacebarPressed"), object: nil)
-                return nil
-            }
-            if keyCode == 53 && isReadingActive && panel?.isVisible == true {
-                NotificationCenter.default.post(
-                    name: NSNotification.Name("NotchEscapePressed"), object: nil)
-                return nil
-            }
-        }
+        // if type == .keyDown {
+        //     let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
+        //     if keyCode == 49 && isReadingActive && panel?.isVisible == true {
+        //         NotificationCenter.default.post(
+        //             name: NSNotification.Name("SpacebarPressed"), object: nil)
+        //         return nil
+        //     }
+        //     if keyCode == 53 && isReadingActive && panel?.isVisible == true {
+        //         NotificationCenter.default.post(
+        //             name: NSNotification.Name("NotchEscapePressed"), object: nil)
+        //         return nil
+        //     }
+        // }
         return Unmanaged.passUnretained(event)
     }
 }
