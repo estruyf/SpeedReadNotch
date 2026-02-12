@@ -9,11 +9,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [1.1.0] - 2026-02-12
 
 ### Added
-- **Automatic Update Checker**: New `UpdateChecker` class that queries GitHub API for latest releases
-- **Update Menu Option**: "Check for Updates" menu item in status bar for manual update checks
-- **Silent Background Updates**: Automatic update checking on app launch without user notification
-- **Version Comparison**: Intelligent version comparison logic to detect newer releases
-- **Update Alerts**: User-friendly alerts for available updates and current version status
+- **Automatic Update Checker**: New `UpdateChecker` class that queries GitHub
+  API for latest releases
+- **Update Menu Option**: "Check for Updates" menu item in status bar for manual
+  update checks
+- **Silent Background Updates**: Automatic update checking on app launch without
+  user notification
+- **Version Comparison**: Intelligent version comparison logic to detect newer
+  releases
+- **Update Alerts**: User-friendly alerts for available updates and current
+  version status
 
 ### Changed
 - Enhanced startup routine in `AppDelegate` to include silent update checks
