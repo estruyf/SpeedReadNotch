@@ -91,7 +91,9 @@ struct NotchView: View {
                 Group {
                     switch mode {
                     case .countdown:
-                        if !words.isEmpty {
+                        if showSettings {
+                            orpWordContent(word: "SpeedReadNotch")
+                        } else if !words.isEmpty {
                             ZStack {
                                 orpWordContent(word: words[0])
                                 // Countdown overlay
@@ -110,34 +112,40 @@ struct NotchView: View {
                             }
                         }
                     case .reading:
-                        if !words.isEmpty && currentIndex < words.count {
+                        if showSettings {
+                            orpWordContent(word: "SpeedReadNotch")
+                        } else if !words.isEmpty && currentIndex < words.count {
                             orpWordContent(word: words[currentIndex])
                         }
                     case .finished:
-                        VStack(spacing: 12) {
-                            Image(systemName: "checkmark")
-                                .font(.system(size: 24))
-                                .foregroundColor(.green)
+                        if showSettings {
+                            orpWordContent(word: "SpeedReadNotch")
+                        } else {
+                            VStack(spacing: 12) {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.green)
 
-                            HStack(spacing: 8) {
-                                Button(action: restart) {
-                                    HStack(spacing: 4) {
-                                        Image(systemName: "arrow.counterclockwise")
-                                        Text("Restart")
+                                HStack(spacing: 8) {
+                                    Button(action: restart) {
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "arrow.counterclockwise")
+                                            Text("Restart")
+                                        }
+                                        .font(.system(size: 12))
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(Color.white.opacity(0.2))
+                                        .cornerRadius(6)
                                     }
-                                    .font(.system(size: 12))
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.white.opacity(0.2))
-                                    .cornerRadius(6)
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                                .help("Restart")
+                                    .buttonStyle(PlainButtonStyle())
+                                    .help("Restart")
 
-                                HoverButton(icon: "xmark", iconColor: .white) {
-                                    dismissNow()
+                                    HoverButton(icon: "xmark", iconColor: .white) {
+                                        dismissNow()
+                                    }
+                                    .help("Close")
                                 }
-                                .help("Close")
                             }
                         }
                     }
@@ -145,7 +153,7 @@ struct NotchView: View {
                 .frame(height: 56 + fontSizeExtraHeight)
 
                 // Controls
-                if mode == .reading || mode == .countdown {
+                if mode == .reading || mode == .countdown || (mode == .finished && showSettings) {
                     VStack(spacing: 4) {
                         HStack(spacing: 8) {
                             if mode == .reading {
