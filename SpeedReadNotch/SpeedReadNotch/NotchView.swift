@@ -10,7 +10,7 @@ struct NotchView: View {
 
     @State private var words: [String] = []
     @State private var currentIndex = 0
-    @State private var countdown = 3
+    @State private var countdownProgress: Double = 1.0
     @State private var mode: ViewMode = .countdown
     @State private var isPlaying = false
     @State private var showSettings = false
@@ -87,10 +87,29 @@ struct NotchView: View {
                 Group {
                     switch mode {
                     case .countdown:
-                        Text("\(countdown)")
-                            .font(.system(size: fontSize, weight: .bold))
-                            .foregroundColor(.red)
-                            .transition(.scale)
+                        if !words.isEmpty {
+                            ZStack(alignment: .leading) {
+                                GeometryReader { geometry in
+                                    HStack(spacing: 0) {
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.2))
+                                            .frame(width: (geometry.size.width / 2) * countdownProgress)
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                        
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.2))
+                                            .frame(width: (geometry.size.width / 2) * countdownProgress)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                }
+                                Text(words[0])
+                                    .font(.system(size: fontSize, weight: .medium))
+                                    .foregroundColor(.white)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.horizontal, textHorizontalPadding)
+                            }
+                        }
                     case .reading:
                         if !words.isEmpty && currentIndex < words.count {
                             Text(words[currentIndex])
@@ -300,17 +319,7 @@ struct NotchView: View {
                         resumeReading()
                     }
                 } else if mode == .countdown {
-                    timer?.invalidate()
-                    timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { t in
-                        if countdown > 1 {
-                            withAnimation {
-                                countdown -= 1
-                            }
-                        } else {
-                            t.invalidate()
-                            startReading()
-                        }
-                    }
+                    resumeCountdown()
                 }
             }
         }
@@ -327,15 +336,20 @@ struct NotchView: View {
 
     func startCountdown() {
         mode = .countdown
-        countdown = 3
+        countdownProgress = 1.0
         cancelAutoDismiss()
+        resumeCountdown()
+    }
 
+    func resumeCountdown() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { t in
-            if countdown > 1 {
-                withAnimation {
-                    countdown -= 1
-                }
+        let interval = 0.02
+        let totalDuration = 3.0
+        let decrement = interval / totalDuration
+
+        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { t in
+            if countdownProgress > 0 {
+                countdownProgress -= decrement
             } else {
                 t.invalidate()
                 startReading()

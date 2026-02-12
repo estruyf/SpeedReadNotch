@@ -23,6 +23,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   text from your clipboard without needing to select it first
 
 ### Changed
+- Replaced number countdown with a progress bar animation behind the first word
 - Enhanced startup routine in `AppDelegate` to include silent update checks
 
 ## [1.0.0] - 2026-02-11
