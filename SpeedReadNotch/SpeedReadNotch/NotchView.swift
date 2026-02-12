@@ -48,6 +48,9 @@ struct NotchView: View {
         dampingFraction: 0.75,
         blendDuration: 0
     )
+    
+    // Color constants
+    private let accentColor = Color(red: 206/255, green: 71/255, blue: 96/255)
 
     enum ViewMode {
         case countdown
@@ -203,7 +206,7 @@ struct NotchView: View {
                             GeometryReader { geo in
                                 ZStack(alignment: .leading) {
                                     Capsule().fill(Color.gray.opacity(0.3))
-                                    Capsule().fill(Color.red)
+                                    Capsule().fill(accentColor)
                                         .frame(width: geo.size.width * readingProgress)
                                 }
                             }
@@ -596,11 +599,11 @@ struct NotchView: View {
                 // Vertical guide line at center — top tick and bottom tick
                 VStack {
                     Rectangle()
-                        .fill(Color.red.opacity(0.5))
+                        .fill(accentColor.opacity(0.5))
                         .frame(width: 1.5, height: 10)
                     Spacer()
                     Rectangle()
-                        .fill(Color.red.opacity(0.5))
+                        .fill(accentColor.opacity(0.5))
                         .frame(width: 1.5, height: 10)
                 }
 
@@ -609,7 +612,7 @@ struct NotchView: View {
                     Text(parts.before)
                         .foregroundColor(.white)
                     Text(String(parts.orp))
-                        .foregroundColor(.red)
+                        .foregroundColor(accentColor)
                     Text(parts.after)
                         .foregroundColor(.white)
                 }
