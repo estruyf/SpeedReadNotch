@@ -19,6 +19,21 @@ and comprehension with word-by-word display right in your notch.
 - **Customizable Settings**: Adjust reading speed, font size, and more
 - **Status Bar Access**: Quick access menu from the status bar
 
+## How It Works: Rapid Serial Visual Presentation
+
+SpeedReadNotch uses **Rapid Serial Visual Presentation (RSRP)** technique to
+help you read faster and more efficiently. This proven method works by:
+
+- **Eliminating Subvocalization**: By forcing your brain to process words at an
+  accelerated pace, RSRP helps eliminate the tendency to read words out loud in
+  your head, which is a major bottleneck in reading speed.
+- **Preventing Eye Backtracking**: The word-by-word sequential display
+  suppresses the natural tendency for your eyes to backtrack along the line
+  while reading, a behavior that significantly slows down reading comprehension.
+- **Maintaining Comprehension**: Studies have shown that this technique not only
+  increases reading speed but also helps maintain or even improve comprehension
+  when used properly.
+
 ## Shortcuts
 
 | Shortcut | Action |
