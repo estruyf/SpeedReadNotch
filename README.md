@@ -31,7 +31,7 @@ and comprehension with word-by-word display right in your notch.
 
 ### Tray Menu
 
-![Tray Menu](assets/screenshots/tray-menu.png)
+![Tray Menu](assets/screenshots/v1.1.0/tray-menu.png)
 
 ### Reading in Action
 ![Reading Mode](assets/screenshots/reading-on.png)
