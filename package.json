@@ -1,0 +1,17 @@
+{
+  "name": "SpeedReadNotch",
+  "version": "1.0.0",
+  "description": "Native macOS Speed Reading application for the notch. Enhance your reading speed and comprehension with word-by-word display right in your notch.",
+  "scripts": {
+    "build": "./SpeedReadNotch/build.sh"
+  },
+  "keywords": [
+    "speed reading",
+    "notch",
+    "macOS",
+    "native app",
+    "productivity"
+  ],
+  "author": "Elio Struyf <elio@struyfconsulting.be>",
+  "license": "MIT"
+}
