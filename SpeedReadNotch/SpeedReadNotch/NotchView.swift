@@ -58,8 +58,8 @@ struct NotchView: View {
     // Geometry constants
     private let cornerRadius: CGFloat = 12
     private let spacing: CGFloat = 8
-    private let baseBodyHeight: CGFloat = 92
-    private let expandedBodyHeight: CGFloat = 222
+    private let baseBodyHeight: CGFloat = 116
+    private let expandedBodyHeight: CGFloat = 250
     private let contentHorizontalPadding: CGFloat = 16
     private let textHorizontalPadding: CGFloat = 16
     private let widthBuffer: CGFloat = 12
@@ -89,35 +89,26 @@ struct NotchView: View {
                     switch mode {
                     case .countdown:
                         if !words.isEmpty {
-                            ZStack(alignment: .leading) {
+                            ZStack {
+                                orpWordContent(word: words[0])
+                                // Countdown overlay
                                 GeometryReader { geometry in
                                     HStack(spacing: 0) {
                                         Rectangle()
                                             .fill(Color.gray.opacity(0.2))
                                             .frame(width: (geometry.size.width / 2) * countdownProgress)
                                             .frame(maxWidth: .infinity, alignment: .trailing)
-                                        
                                         Rectangle()
                                             .fill(Color.gray.opacity(0.2))
                                             .frame(width: (geometry.size.width / 2) * countdownProgress)
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
-                                Text(words[0])
-                                    .font(.system(size: fontSize, weight: .medium))
-                                    .foregroundColor(.white)
-                                    .lineLimit(1)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.horizontal, textHorizontalPadding)
                             }
                         }
                     case .reading:
                         if !words.isEmpty && currentIndex < words.count {
-                            Text(words[currentIndex])
-                                .font(.system(size: fontSize, weight: .medium))
-                                .foregroundColor(.white)
-                                .lineLimit(1)
-                                .padding(.horizontal, textHorizontalPadding)
+                            orpWordContent(word: words[currentIndex])
                         }
                     case .finished:
                         VStack(spacing: 12) {
@@ -148,55 +139,78 @@ struct NotchView: View {
                         }
                     }
                 }
-                .frame(height: 40 + fontSizeExtraHeight)
+                .frame(height: 56 + fontSizeExtraHeight)
 
                 // Controls
                 if mode == .reading || mode == .countdown {
-                    HStack(spacing: 8) {
+                    VStack(spacing: 4) {
+                        HStack(spacing: 8) {
+                            if mode == .reading {
+                                // Restart button
+                                HoverButton(icon: "backward.end.fill", iconColor: .white) {
+                                    restart()
+                                }
+                                .help("Restart")
+                                // Previous word button
+                                HoverButton(
+                                    icon: "backward.fill",
+                                    iconColor: currentIndex == 0 ? .gray : .white
+                                ) {
+                                    goBack1Word()
+                                }
+                                .help("Previous word")
+                                .disabled(currentIndex == 0)
+                                // Play/Pause button
+                                HoverButton(
+                                    icon: isPlaying ? "pause.fill" : "play.fill", iconColor: .white
+                                ) {
+                                    togglePlayPause()
+                                }
+                                .help(isPlaying ? "Pause" : "Play")
+                                // Next word button
+                                HoverButton(
+                                    icon: "forward.fill",
+                                    iconColor: currentIndex >= words.count - 1 ? .gray : .white
+                                ) {
+                                    goForward1Word()
+                                }
+                                .help("Next word")
+                                .disabled(currentIndex >= words.count - 1)
+                            }
+                            Spacer()
+                            if mode == .reading {
+                                // Progress indicator
+                                Text("\(currentIndex + 1)/\(words.count)")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(.gray)
+                            }
+                            // Settings gear icon (always visible in countdown/reading)
+                            HoverButton(icon: "gear", iconColor: .white) {
+                                showSettings.toggle()
+                            }
+                            .help("Settings")
+                            // Close button (always visible in countdown/reading)
+                            HoverButton(icon: "xmark", iconColor: .white) {
+                                dismissNow()
+                            }
+                            .help("Close")
+                        }
+                        .padding(.horizontal, 12)
+                        .frame(height: 20)
+                        
+                        // Reading progress bar
                         if mode == .reading {
-                            // Play/Pause button
-                            HoverButton(
-                                icon: isPlaying ? "pause.fill" : "play.fill", iconColor: .white
-                            ) {
-                                togglePlayPause()
+                            GeometryReader { geo in
+                                ZStack(alignment: .leading) {
+                                    Capsule().fill(Color.gray.opacity(0.3))
+                                    Capsule().fill(Color.red)
+                                        .frame(width: geo.size.width * readingProgress)
+                                }
                             }
-                            .help(isPlaying ? "Pause" : "Play")
-                            // Go back 5 words button
-                            HoverButton(
-                                icon: "gobackward.5",
-                                iconColor: currentIndex == 0 ? .gray : .white
-                            ) {
-                                goBack5Words()
-                            }
-                            .help("Go back 5 words")
-                            .disabled(currentIndex == 0)
-
-                            // Restart button
-                            HoverButton(icon: "arrow.counterclockwise", iconColor: .white) {
-                                restart()
-                            }
-                            .help("Restart")
+                            .frame(height: 2)
+                            .padding(.horizontal, textHorizontalPadding)
                         }
-                        Spacer()
-                        if mode == .reading {
-                            // Progress indicator
-                            Text("\(currentIndex + 1)/\(words.count)")
-                                .font(.system(size: 10))
-                                .foregroundColor(.gray)
-                        }
-                        // Settings gear icon (always visible in countdown/reading)
-                        HoverButton(icon: "gear", iconColor: .white) {
-                            showSettings.toggle()
-                        }
-                        .help("Settings")
-                        // Close button (always visible in countdown/reading)
-                        HoverButton(icon: "xmark", iconColor: .white) {
-                            dismissNow()
-                        }
-                        .help("Close")
                     }
-                    .padding(.horizontal, 12)
-                    .frame(height: 20)
                 }
 
                 // Settings panel
@@ -257,7 +271,8 @@ struct NotchView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 4)
                     }
-                    .padding(8)
+                    .padding(.horizontal, textHorizontalPadding)
+                    .padding(.vertical, 8)
                     .frame(maxWidth: .infinity)
                 }
             }
@@ -388,20 +403,23 @@ struct NotchView: View {
 
     func resumeReading() {
         timer?.invalidate()
+        scheduleNextWord()
+    }
 
-        let interval = 60.0 / wpm
+    private func scheduleNextWord() {
+        guard isPlaying, !words.isEmpty, currentIndex < words.count else { return }
 
-        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { t in
-            if !isPlaying {
-                return
-            }
+        let delay = delayForWord(words[currentIndex])
 
-            if currentIndex < words.count - 1 {
-                currentIndex += 1
+        timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
+            guard self.isPlaying else { return }
+
+            if self.currentIndex < self.words.count - 1 {
+                self.currentIndex += 1
+                self.scheduleNextWord()
             } else {
-                t.invalidate()
-                mode = .finished
-                autoDismiss()
+                self.mode = .finished
+                self.autoDismiss()
             }
         }
     }
@@ -416,8 +434,22 @@ struct NotchView: View {
         }
     }
 
-    func goBack5Words() {
-        currentIndex = max(0, currentIndex - 5)
+    func goBack1Word() {
+        currentIndex = max(0, currentIndex - 1)
+        if isPlaying {
+            timer?.invalidate()
+            scheduleNextWord()
+        }
+    }
+
+    func goForward1Word() {
+        if currentIndex < words.count - 1 {
+            currentIndex += 1
+            if isPlaying {
+                timer?.invalidate()
+                scheduleNextWord()
+            }
+        }
     }
 
     func restart() {
@@ -473,19 +505,123 @@ struct NotchView: View {
 
     private func updateNotchWidth() {
         let minWidth: CGFloat = 500
-        let font = NSFont.systemFont(ofSize: fontSize, weight: .medium)
+        let font = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .bold)
         let maxWordWidth =
             words
             .map { word in
                 (word as NSString).size(withAttributes: [.font: font]).width
             }
             .max() ?? 0
+        // With ORP alignment, the word can extend up to its full width
+        // on one side of center, so we need 2x the max word width
         let paddedWidth =
-            maxWordWidth
+            maxWordWidth * 2
             + (contentHorizontalPadding * 2)
-            + (textHorizontalPadding * 2)
             + widthBuffer
         notchWidth = max(minWidth, paddedWidth)
+    }
+
+    // MARK: - ORP (Optimal Recognition Point) Helpers
+
+    private func calculateORPIndex(for word: String) -> Int {
+        let letters = word.drop(while: { !$0.isLetter && !$0.isNumber })
+        let leadingPunctCount = word.count - letters.count
+        let letterCount = letters.count
+
+        let orpOffset: Int
+        switch letterCount {
+        case 0: return 0
+        case 1...3: orpOffset = 0
+        case 4...5: orpOffset = 1
+        case 6...9: orpOffset = 2
+        case 10...13: orpOffset = 3
+        default: orpOffset = 4
+        }
+
+        return leadingPunctCount + orpOffset
+    }
+
+    private func splitWord(_ word: String) -> (before: String, orp: Character, after: String) {
+        guard !word.isEmpty else { return ("", " ", "") }
+        let index = calculateORPIndex(for: word)
+        let safeIndex = min(index, word.count - 1)
+        let wordIndex = word.index(word.startIndex, offsetBy: safeIndex)
+        let before = String(word[word.startIndex..<wordIndex])
+        let orp = word[wordIndex]
+        let afterStartIndex = word.index(after: wordIndex)
+        let after = afterStartIndex < word.endIndex ? String(word[afterStartIndex...]) : ""
+        return (before, orp, after)
+    }
+
+    private func textWidth(_ string: String, font: NSFont) -> CGFloat {
+        (string as NSString).size(withAttributes: [.font: font]).width
+    }
+
+    private func delayForWord(_ word: String) -> Double {
+        let baseDelay = 60.0 / wpm
+        var multiplier = 1.0
+
+        if word.count >= 7 {
+            multiplier = 1.5
+        }
+
+        if let lastChar = word.last {
+            if ".!?".contains(lastChar) {
+                multiplier = max(multiplier, 2.0)
+            } else if ",;:".contains(lastChar) {
+                multiplier = max(multiplier, 1.5)
+            }
+        }
+
+        return baseDelay * multiplier
+    }
+
+    private var readingProgress: CGFloat {
+        guard words.count > 1 else { return 1 }
+        return CGFloat(currentIndex) / CGFloat(words.count - 1)
+    }
+
+    @ViewBuilder
+    private func orpWordContent(word: String) -> some View {
+        let parts = splitWord(word)
+        let font = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .bold)
+        let beforeWidth = textWidth(parts.before, font: font)
+        let orpCharWidth = textWidth(String(parts.orp), font: font)
+
+        GeometryReader { geometry in
+            let centerX = geometry.size.width / 2
+            let offsetX = centerX - beforeWidth - orpCharWidth / 2
+
+            ZStack {
+                // Vertical guide line at center — top tick and bottom tick
+                VStack {
+                    Rectangle()
+                        .fill(Color.red.opacity(0.5))
+                        .frame(width: 1.5, height: 10)
+                    Spacer()
+                    Rectangle()
+                        .fill(Color.red.opacity(0.5))
+                        .frame(width: 1.5, height: 10)
+                }
+
+                // Word with ORP highlighting
+                HStack(spacing: 0) {
+                    Text(parts.before)
+                        .foregroundColor(.white)
+                    Text(String(parts.orp))
+                        .foregroundColor(.red)
+                    Text(parts.after)
+                        .foregroundColor(.white)
+                }
+                .font(.system(size: fontSize, weight: .bold, design: .monospaced))
+                .lineLimit(1)
+                .fixedSize()
+                .padding(.vertical, 12)
+                .frame(width: geometry.size.width, alignment: .leading)
+                .offset(x: offsetX)
+            }
+            .frame(width: geometry.size.width, height: geometry.size.height)
+        }
     }
 
     // MARK: - Visual Components
