@@ -21,5 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Setup status bar menu
         StatusBarManager.shared.setupStatusBar()
+        
+        // Silent update check on launch
+        UpdateChecker.shared.checkForUpdates(silent: true)
     }
 }

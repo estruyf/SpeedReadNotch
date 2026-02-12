@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Native macOS Speed Reading application for the notch. Enhance your reading speed and comprehension with word-by-word display right in your notch.",
   "scripts": {
-    "build": "./SpeedReadNotch/build.sh"
+    "build": "./SpeedReadNotch/build.sh",
+    "postversion": "node scripts/postversion.js"
   },
   "keywords": [
     "speed reading",

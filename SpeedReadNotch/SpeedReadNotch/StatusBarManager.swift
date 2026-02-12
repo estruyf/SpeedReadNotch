@@ -41,6 +41,8 @@ class StatusBarManager: NSObject {
         let versionItem = NSMenuItem(title: "Version \(appVersion)", action: nil, keyEquivalent: "")
         versionItem.isEnabled = false
         menu?.addItem(versionItem)
+        menu?.addItem(
+            NSMenuItem(title: "Check for Updates", action: #selector(checkForUpdates), keyEquivalent: ""))
         menu?.addItem(NSMenuItem.separator())
         menu?.addItem(
             NSMenuItem(title: "Support me ❤️", action: #selector(openSupport), keyEquivalent: ""))
@@ -97,6 +99,10 @@ class StatusBarManager: NSObject {
 
     @objc private func openSettings() {
         NotchWindowController.shared.showSettings()
+    }
+
+    @objc private func checkForUpdates() {
+        UpdateChecker.shared.checkForUpdates(silent: false)
     }
 
     @objc private func openSupport() {
